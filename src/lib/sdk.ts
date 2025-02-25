@@ -1,10 +1,9 @@
-import { sdkBuilder, SdkBuilderConfig,  ContextConfig, FetchContext, RedisCacheProvider, CacheProvider } from '@nuecms/sdk-builder';
-import { createVerify, randomUUID } from 'crypto';
+import { sdkBuilder, SdkBuilderConfig, FetchContext, RedisCacheProvider, CacheProvider } from '@nuecms/sdk-builder';
+import { randomUUID } from 'crypto';
 import { Buffer } from 'buffer';
 import { debuglog } from 'util';
 const debug = debuglog('paypal-sdk');
 
-export type PayPalSdkSignType = 'RSA2' | 'RSA';
 
 interface PayPalSDKConfig {
   clientId: string;
@@ -35,7 +34,6 @@ export type ContextConfig = {
   access_token?: string;
 }
 
-const sdkName = '@nuecms/paypal-sdk';
 const defaultEndpoint = 'https://api.paypal.com';
 
 const createRequestId = () => {
@@ -92,7 +90,7 @@ export function paypalSdk(config: PayPalSDKConfig): PayPalSDK {
     };
   });
 
-  sdk.rx('reqInterceptor', async (config: ContextConfig, options: any = {}) => {
+  sdk.rx('reqInterceptor', async (config: Record<string, any>, options: any = {}) => {
     const requestId = createRequestId();
     options.headers = {
       ...options.headers,
