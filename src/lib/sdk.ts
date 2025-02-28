@@ -107,9 +107,12 @@ export function paypalSdk(config: PayPalSDKConfig): PayPalSDK {
       body: {
         grant_type: 'client_credentials',
       },
+      stringifyBody: (body) => {
+        return new URLSearchParams(body).toString();
+      },
+      contentType: 'application/x-www-form-urlencoded',
       headers: {
         'Authorization': `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
     const expiresIn = response.expires_in || 3600;

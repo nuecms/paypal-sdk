@@ -5,16 +5,29 @@ interface IncomingMessage extends HttpIncomingMessage {
 }
 import { URL } from 'url';
 import querystring from 'querystring';
-
-import { paypalSdk } from '../../src/lib/sdk';
+import { paypalSdk, RedisCacheProvider } from '../../src/lib/sdk';
+import { Redis } from 'ioredis';
 
 const sdk = paypalSdk({
-  endpoint: 'https://api.sandbox.paypal.com',
+  endpoint: 'https://api-m.sandbox.paypal.com',
   clientId: process.env.VITE_PAYPAL_CLIENT_ID || '',
   clientSecret: process.env.VITE_PAYPAL_CLIENT_SECRET || '',
+  cacheProvider: new RedisCacheProvider(new Redis())
 });
 
 const routes = {
+  'GET /token': async (req, res)=> {
+    try {
+      const response = await sdk.authenticate();
+      console.log('response', response);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(response));
+    } catch (error) {
+      console.error('Error:', error.message);
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Internal Server Error');
+    }
+  },
   'POST /notify/paypal': async (req, res) => {
     // log notification parameters
     const params = req.body;
