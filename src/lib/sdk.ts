@@ -71,14 +71,19 @@ const customResponseTransformer = (responseData: any, context: FetchContext, res
 }
 
 export function paypalSdk(config: PayPalSDKConfig): PayPalSDK {
+  const timeout = config.timeout || 10000;
   const sdkConfig: SdkBuilderConfig = {
     baseUrl: config.endpoint || defaultEndpoint,
     cacheProvider: config.cacheProvider,
+    placeholders: {
+      access_token: '{access_token}',
+    },
     maxRetries: config.maxRetries ?? 0,
+    timeout: timeout,
     config: {
       clientId: config.clientId,
       clientSecret: config.clientSecret,
-      timeout: config.timeout || 10000,
+      timeout: timeout,
       endpoint: config.endpoint || defaultEndpoint,
     } as ContextConfig,
     customResponseTransformer: config.customResponseTransformer || customResponseTransformer,
@@ -116,13 +121,15 @@ export function paypalSdk(config: PayPalSDKConfig): PayPalSDK {
   });
 
   sdk.rx('reqInterceptor', async (config: Record<string, any>, options: any = {}) => {
-    const requestId = createRequestId();
-    options.headers = {
-      ...options.headers,
-      'Authorization': `Bearer ${config.access_token}`,
-      'PayPal-Request-Id': requestId,
-      'Content-Type': 'application/json'
-    };
+    if (!options.headers.Authorization) {
+      const requestId = createRequestId();
+      options.headers = {
+        ...options.headers,
+        'Authorization': `Bearer ${config.access_token}`,
+        'PayPal-Request-Id': requestId,
+        'Content-Type': 'application/json'
+      };
+    }
     return options;
   });
 

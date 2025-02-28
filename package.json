@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
+    "dev": "vite build --watch",
     "lint": "eslint . --ext .ts",
     "test": "vitest --ui --api.port 3000",
     "test:coverage": "vitest --coverage",
