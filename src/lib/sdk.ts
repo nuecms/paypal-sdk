@@ -6,13 +6,28 @@ const debug = debuglog('paypal-sdk');
 
 
 interface PayPalSDKConfig {
+  /** PayPal client ID from the developer dashboard */
   clientId: string;
+
+  /** PayPal client secret from the developer dashboard */
   clientSecret: string;
+
+  /** Base URL for PayPal API calls, defaults to 'https://api.paypal.com' */
   endpoint?: string;
+
+  /** Request timeout in milliseconds, defaults to 10000 */
   timeout?: number;
+
+  /** Maximum number of retry attempts for failed requests, defaults to 0 */
   maxRetries?: number;
+
+  /** Cache provider for storing access tokens */
   cacheProvider?: CacheProvider;
+
+  /** Custom function to transform API responses */
   customResponseTransformer?: (response: any) => any;
+
+  /** Function to determine if a response status code indicates an authentication error */
   authCheckStatus?: (status: number, response: any) => boolean;
 }
 
@@ -27,10 +42,20 @@ export type PayPalSDK = ReturnType<typeof sdkBuilder>
 
 export type ContextConfig = {
   [key: string]: any;
+
+  /** PayPal client ID */
   clientId: string;
+
+  /** PayPal client secret */
   clientSecret: string;
+
+  /** Request timeout in milliseconds */
   timeout: number;
+
+  /** Base URL for API calls */
   endpoint: string;
+
+  /** OAuth access token */
   access_token?: string;
 }
 
