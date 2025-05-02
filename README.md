@@ -1,6 +1,5 @@
 # PayPal SDK
 
->> WIP
 
 A flexible and lightweight SDK for building PayPal integrations with dynamic endpoints, caching, and response transformations.
 
