@@ -1,6 +1,6 @@
 {
   "name": "@nuecms/paypal-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A flexible and lightweight Paypal SDK for Node.js",
   "type": "module",
   "main": "dist/index.js",
